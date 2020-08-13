@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Duran.UtimcoCodingExercise.Serialization;
 using Newtonsoft.Json;
 
 namespace Duran.UtimcoCodingExercise
@@ -9,43 +10,44 @@ namespace Duran.UtimcoCodingExercise
     {
         static void Main(string[] args)
         {
-            //deserialize
-            var filePath = @"E:\code\UtimcoCodingExercise\scripts\example.json";
-            var jsonInput = File.ReadAllText(filePath);
-            var jsonList = JsonConvert.DeserializeObject<List<jsonMenuContainer>>(jsonInput);
-
-            //calculate sum with given conditions
-            foreach (var parentMenu in jsonList)
+            var jsonMenuObject = ParseJsonMenuFile(args[0]);
+            foreach (var parentMenu in jsonMenuObject)
             {
-                var idSum = 0;
-                foreach (var menuItem in parentMenu.menu.items)
-                {
-                    if (string.IsNullOrEmpty(menuItem?.label)) continue;
-                    idSum += menuItem.id;
-                }
-
-                Console.WriteLine(idSum);
+                Console.WriteLine(CalculateMenuIDs(parentMenu));
             }
-
-            //end
+            
             Console.ReadKey();
         }
-    }
 
-    public class jsonMenuContainer
-    {
-        public jsonMenu menu;
-    }
+        /// <summary>
+        /// Open a valid JSON menu file, deserialize.
+        /// </summary>
+        /// <param name="fileURI">valid file path</param>
+        /// <returns>A JsonMenuContainer List</returns>
+        private static IEnumerable<JsonMenuContainer> ParseJsonMenuFile(string fileURI)
+        {
+            // need some basic file validation and error handling.
+            var jsonInput = File.ReadAllText(fileURI);
+            return JsonConvert.DeserializeObject<IEnumerable<JsonMenuContainer>>(jsonInput);
+        }
 
-    public class jsonMenu
-    {
-        public string header;
-        public List<jsonItem> items;
-    }
+        /// <summary>
+        /// get the sum of IDs for a given menu container
+        /// </summary>
+        /// <param name="parentMenu"></param>
+        /// <returns></returns>
+        private static int CalculateMenuIDs(JsonMenuContainer parentMenu)
+        {
+            // calculate the sum of IDs
+            var idSum = 0;
+            foreach (var menuItem in parentMenu.menu.items)
+            {
+                // skip if no label
+                if (string.IsNullOrEmpty(menuItem?.label)) continue;
+                idSum += menuItem.id;
+            }
 
-    public class jsonItem
-    {
-        public int id;
-        public string label;
+            return idSum;
+        }
     }
 }
