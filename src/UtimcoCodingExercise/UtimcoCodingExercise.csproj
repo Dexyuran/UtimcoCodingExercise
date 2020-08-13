@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonMenuLoader\IJsonMenuLoader.cs" />
+    <Compile Include="JsonMenuLoader\JsonMenuFileLoader.cs" />
+    <Compile Include="JsonMenuLoader\JsonMenuLoaderFactory.cs" />
+    <Compile Include="JsonMenuLoader\JsonMenuStringLoader.cs" />
+    <Compile Include="MenuActions\IMenuCalculation.cs" />
+    <Compile Include="MenuActions\MenuCalculationSumIDs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\JsonMenu.cs" />
